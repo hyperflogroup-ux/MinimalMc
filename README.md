@@ -38,3 +38,17 @@ MinimalMc is a modern desktop launcher designed to make managing and launching M
 ## Downloads
 
 Get the latest version from [GitHub Releases](https://github.com/hyperflogroup-ux/MinimalMc/releases).
+
+## Screenshots
+
+<p align="center">
+  <img src="app_live.png" width="85%" alt="MinimalMc main interface" />
+</p>
+
+<p align="center">
+  <img src="app_live2.png" width="85%" alt="MinimalMc launcher" />
+</p>
+
+<p align="center">
+  <img src="app_window.png" width="85%" alt="MinimalMc application window" />
+</p>
