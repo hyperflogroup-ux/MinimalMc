@@ -1,0 +1,58 @@
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.cache/
+.vite/
+*.tsbuildinfo
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+logs/
+*.log
+*-debug.log*
+.tmp-*
+
+# Vite
+vite.config.*.timestamp-*
+
+# Platform files
+.DS_Store
+Thumbs.db
+
+# Figma / agent workspace files
+/.figma/design-context/
+/.plugins/
+/.opencode-skills/
+.claude-replay.*
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Generated Flatpak repository
+/repo/
+
+# Compiled installers
+*.flatpak
+*.deb
+*.rpm
+*.AppImage
+
+# Windows metadata
+desktop.ini
+
+# Temporary project artifacts
+/npm
+/tauri
+/figma-make-app@1.0.0
+/image_generate/
+/media-output/
+/.figma/

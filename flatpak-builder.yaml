@@ -1,0 +1,32 @@
+id: app.minimalmc.launcher
+runtime: org.gnome.Platform
+runtime-version: "51"
+sdk: org.gnome.Sdk
+command: minimalmc
+appstream-compose: false
+
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+
+modules:
+  - name: minimalmc
+    buildsystem: simple
+    build-options:
+      no-debuginfo: true
+    sources:
+      - type: file
+        path: src-tauri/target/release/bundle/deb/MinimalMc_1.0.0_amd64.deb
+      - type: file
+        path: flatpak.metainfo.xml
+
+    build-commands:
+      - mkdir -p deb-extract && cd deb-extract && ar -x ../MinimalMc_1.0.0_amd64.deb && tar -xf data.tar.gz
+      - install -Dm755 deb-extract/usr/bin/minimalmc /app/bin/minimalmc
+      - sed -i 's/^Icon=.*/Icon=app.minimalmc.launcher/' deb-extract/usr/share/applications/MinimalMc.desktop
+      - install -Dm644 deb-extract/usr/share/applications/MinimalMc.desktop /app/share/applications/app.minimalmc.launcher.desktop
+      - install -Dm644 deb-extract/usr/share/icons/hicolor/1024x1024/apps/minimalmc.png /app/share/icons/hicolor/1024x1024/apps/app.minimalmc.launcher.png
+      - install -Dm644 flatpak.metainfo.xml /app/share/metainfo/app.minimalmc.launcher.metainfo.xml

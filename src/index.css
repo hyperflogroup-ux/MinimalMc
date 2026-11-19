@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: 'Geist', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --color-bg: var(--bg);
+  --color-s1: var(--s1);
+  --color-s2: var(--s2);
+  --color-s3: var(--s3);
+  --color-fg: var(--fg);
+  --color-mu: var(--mu);
+  --color-mu2: var(--mu2);
+  --color-line: var(--line);
+  --color-ac: var(--ac);
+  --color-act: var(--act);
+  --color-acfg: var(--acfg);
+}
+
+:root,
+[data-theme='dark'] {
+  --bg: #000000;
+  --s1: #0a0a0a;
+  --s2: #131313;
+  --s3: #1f1f1f;
+  --fg: #e8e9e6;
+  --mu: #8d918c;
+  --mu2: #5f635f;
+  --line: rgba(255, 255, 255, 0.09);
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --glass: rgba(8, 8, 8, 0.7);
+  --acfg: #0b100b;
+  color-scheme: dark;
+}
+[data-theme='light'] {
+  --bg: #f3f1ed;
+  --s1: #ffffff;
+  --s2: #f0eeea;
+  --s3: #e5e2dc;
+  --fg: #1c1d1b;
+  --mu: #666a64;
+  --mu2: #9a9d97;
+  --line: rgba(30, 28, 20, 0.09);
+  --shadow: 0 12px 40px rgba(40, 35, 20, 0.14), 0 0 0 1px rgba(30, 28, 20, 0.06);
+  --glass: rgba(255, 255, 255, 0.6);
+  color-scheme: light;
+}
+:root {
+  --ac: #f4f4f2;
+  --act: var(--ac);
+}
+[data-theme='light'] {
+  --act: color-mix(in oklab, var(--ac) 62%, black);
+}
+[data-theme='light'][data-accent='white'] { --ac: #1c1d1b; --acfg: #ffffff; --act: #1c1d1b;
+}
+[data-accent='white'] { --ac: #f4f4f2; }
+[data-accent='red'] { --ac: #e5655e; }
+[data-accent='orange'] { --ac: #ea8a3c; }
+[data-accent='yellow'] { --ac: #d9b53c; }
+[data-accent='green'] { --ac: #5fb15a; }
+[data-accent='cyan'] { --ac: #3fb7c6; }
+[data-accent='blue'] { --ac: #5b92f2; }
+[data-accent='indigo'] { --ac: #7a7ff0; }
+[data-accent='violet'] { --ac: #a574e6; }
+[data-accent='pink'] { --ac: #e272a6; }
+
+html { font-size: 17px; }
+html[data-compact='true'] { font-size: 15px; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+::selection { background: color-mix(in oklab, var(--ac) 35%, transparent); }
+
+.glass { background: var(--s1); }
+[data-glass='true'] .glass {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(1.4);
+}
+[data-anim='false'] *, [data-anim='false'] *::before {
+  transition: none !important;
+  animation: none !important;
+}
+
+.scroll { overflow: auto; scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.scroll:hover { scrollbar-color: var(--s3) transparent; }
+
+input[type='range'] { accent-color: var(--ac); }
+.tip { pointer-events: none; opacity: 0; transform: translateY(2px); transition: opacity 0.08s, transform 0.08s; }
+.has-tip:hover > .tip { opacity: 1; transform: none; transition-delay: 0.15s; }
+
+@keyframes pop { from { opacity: 0; transform: scale(0.97) translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pop { animation: pop 0.16s ease-out; }
+.fade { animation: fade 0.16s ease-out; }
+.spin { animation: spin 0.8s linear infinite; }
+
+@keyframes swa { from { transform: rotateX(32deg); } to { transform: rotateX(-32deg); } }
+@keyframes swb { from { transform: rotateX(-32deg); } to { transform: rotateX(32deg); } }
+.swa { animation: swa 0.7s ease-in-out infinite alternate; }
+.swb { animation: swb 0.7s ease-in-out infinite alternate; }
+@keyframes blink { 0%, 90%, 100% { opacity: 0; } 93%, 97% { opacity: 1; } }
+.blink { animation: blink 3.4s linear infinite; }
