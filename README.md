@@ -41,12 +41,13 @@ Get the latest version from [GitHub Releases](https://github.com/hyperflogroup-u
 
 ## screenshots
 
-![instance creation 1](screenshots/instance%20creation1.png)
-![instance version selector](screenshots/instance%20version%20selector.png)
-![instance creation](screenshots/instance%20creation.png)
-![instance options](screenshots/instance%20options.png)
-![mod showcase](screenshots/mod%20showcase.png)
 ![browse modrinth or curseforge](screenshots/browse%20modrinth%20or%20curseforge.png)
-![skintab](screenshots/skintab.png)
-![settings](screenshots/settings.png)
 ![dashboard](screenshots/dashboard.png)
+![home](screenshots/home.png)
+![instance creation](screenshots/instance%20creation.png)
+![instance creation1](screenshots/instance%20creation1.png)
+![instance options](screenshots/instance%20options.png)
+![instance version selector](screenshots/instance%20version%20selector.png)
+![mod showcase](screenshots/mod%20showcase.png)
+![settings](screenshots/settings.png)
+![skintab](screenshots/skintab.png)
