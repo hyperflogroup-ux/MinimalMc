@@ -1,16 +1,30 @@
+```yaml
 name: Build MinimalMc for macOS
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: minimalmc-macos-build
+  cancel-in-progress: false
+
 jobs:
   build-macos:
-    runs-on: macos-latest
+    name: Build MinimalMc for macOS (Apple Silicon)
+    runs-on: macos-15-intel
     timeout-minutes: 45
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Check Xcode
+        run: |
+          xcode-select -p
+          xcodebuild -version
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -18,12 +32,12 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Install Rust
+      - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin
 
-      - name: Cache Rust builds
+      - name: Rust cache
         uses: Swatinem/rust-cache@v2
         with:
           key: macos-aarch64
@@ -31,14 +45,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build MinimalMc
-        run: npm run tauri -- build --target aarch64-apple-darwin
-        env:
-          APPLE_SIGNING_IDENTITY: "-"
+      - name: Build MinimalMc DMG
+        run: |
+          npm run tauri build -- \
+            --target aarch64-apple-darwin \
+            --bundles dmg
 
-      - name: Upload DMG
+      - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
         with:
           name: MinimalMc-macOS-Apple-Silicon
           path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           if-no-files-found: error
+          retention-days: 14
+```
