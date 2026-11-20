@@ -7,14 +7,7 @@ on:
 jobs:
   build-macos:
     runs-on: macos-latest
-
-    strategy:
-      matrix:
-        include:
-          - target: aarch64-apple-darwin
-            arch: Apple-Silicon
-          - target: x86_64-apple-darwin
-            arch: Intel
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
@@ -29,20 +22,24 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: aarch64-apple-darwin
+
+      - name: Cache Rust builds
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: macos-aarch64
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build MinimalMc
-        run: npm run tauri build -- --target ${{ matrix.target }}
+        run: npm run tauri -- build --target aarch64-apple-darwin
         env:
           APPLE_SIGNING_IDENTITY: "-"
 
-      - name: Upload macOS build
+      - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
-          name: MinimalMc-macOS-${{ matrix.arch }}
-          path: |
-            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
-            src-tauri/target/${{ matrix.target }}/release/bundle/macos/*.app
+          name: MinimalMc-macOS-Apple-Silicon
+          path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+          if-no-files-found: error
