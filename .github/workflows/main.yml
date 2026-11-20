@@ -1,0 +1,48 @@
+
+name: Build MinimalMc for macOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            arch: Apple-Silicon
+          - target: x86_64-apple-darwin
+            arch: Intel
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build MinimalMc
+        run: npm run tauri build -- --target ${{ matrix.target }}
+        env:
+          APPLE_SIGNING_IDENTITY: "-"
+
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: MinimalMc-macOS-${{ matrix.arch }}
+          path: |
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+            src-tauri/target/${{ matrix.target }}/release/bundle/macos/*.app
