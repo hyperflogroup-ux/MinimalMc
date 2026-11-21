@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import fs from 'node:fs'
 import path from 'node:path'
-
 const siteJsonPath = path.resolve(__dirname, './.figma/make/site.json')
 const siteConfiguration: FigmaSiteConfiguration = fs.existsSync(siteJsonPath)
   ? (JSON.parse(fs.readFileSync(siteJsonPath, 'utf-8')) as FigmaSiteConfiguration)
