@@ -1,10 +1,13 @@
 import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import fs from 'node:fs'
 import path from 'node:path'
 
-import siteConfiguration from './.figma/make/site.json'
-
+const siteJsonPath = path.resolve(__dirname, './.figma/make/site.json')
+const siteConfiguration: FigmaSiteConfiguration = fs.existsSync(siteJsonPath)
+  ? (JSON.parse(fs.readFileSync(siteJsonPath, 'utf-8')) as FigmaSiteConfiguration)
+  : {}
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -18,7 +21,7 @@ export default defineConfig(({ mode }) => {
       minify: !emitSourcemaps,
     },
     plugins: [
-react(),
+      react(),
       tailwindcss(),
       figmaSiteConfiguration(siteConfiguration),
       figmaErrorOverlayReplay(),
@@ -38,7 +41,7 @@ react(),
         ignored: [
           '**/.figma/**',
           '**/src-tauri/**',
-],
+        ],
       },
     },
     preview: {
@@ -87,7 +90,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
 
-  const title = config.title ?? "Figma Make App"
+  const title = config.title ?? 'Figma Make App'
   const description = config.description ?? ''
   const favicon = config.icons?.icon ?? ''
   const socialImage = config.openGraph?.image ?? ''
@@ -219,17 +222,17 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
 }
 
 /**
- * Replay the most recent build error to clients that connect after
- * it was first broadcast. Vite buffers an error payload only while
- * no clients are connected and clears the buffer on the first
- * reconnect (see `bufferedMessage` in `createWebSocketServer`), so
- * if the preview iframe reloads after Vite already delivered an
- * error to a live socket, the new socket misses the payload and
- * the overlay stays hidden even though the build is still broken.
- * We intercept `ws.send` to remember the latest error and replay
- * it on every new connection; the cache clears on a successful
- * `update` or `full-reload` so a stale overlay can't survive a
- * fixed build.
+- Replay the most recent build error to clients that connect after
+- it was first broadcast. Vite buffers an error payload only while
+- no clients are connected and clears the buffer on the first
+- reconnect (see `bufferedMessage` in `createWebSocketServer`), so
+- if the preview iframe reloads after Vite already delivered an
+- error to a live socket, the new socket misses the payload and
+- the overlay stays hidden even though the build is still broken.
+- We intercept `ws.send` to remember the latest error and replay
+- it on every new connection; the cache clears on a successful
+- `update` or `full-reload` so a stale overlay can't survive a
+- fixed build.
  */
 function figmaErrorOverlayReplay(): Plugin {
   return {
@@ -262,16 +265,16 @@ function figmaErrorOverlayReplay(): Plugin {
 }
 
 /**
- * Reload when a module that previously defined a React Refresh boundary stops
- * defining one. This happens when an agent moves a component into a new file
- * and replaces the old module with a re-export:
+- Reload when a module that previously defined a React Refresh boundary stops
+- defining one. This happens when an agent moves a component into a new file
+- and replaces the old module with a re-export:
  *
- *   export { default } from './app/App'
+-   export { default } from './app/App'
  *
- * Vite otherwise accepts the update using the previous module's HMR boundary,
- * but the re-export-only transform no longer registers a replacement for the
- * mounted component family. React reports a successful refresh while leaving
- * the old tree mounted until the page is reloaded.
+- Vite otherwise accepts the update using the previous module's HMR boundary,
+- but the re-export-only transform no longer registers a replacement for the
+- mounted component family. React reports a successful refresh while leaving
+- the old tree mounted until the page is reloaded.
  */
 function figmaReactRefreshBoundaryFallback(): Plugin {
   const hadRefreshBoundary = new Map<string, boolean>()
@@ -302,15 +305,15 @@ function figmaReactRefreshBoundaryFallback(): Plugin {
 }
 
 /**
- * Serves a blank render-target page at /.figma/make/kit.html that
- * the Figma preview script drives directly. The page exposes a
- * registry of every file matching `storiesGlob` on
- * window.__FIGMA__.stories so the design surface can dynamically
- * import + mount each entry into its own grid view.
+- Serves a blank render-target page at /.figma/make/kit.html that
+- the Figma preview script drives directly. The page exposes a
+- registry of every file matching `storiesGlob` on
+- window.__FIGMA__.stories so the design surface can dynamically
+- import + mount each entry into its own grid view.
  *
- * Dev-only: `apply: 'serve'` gates the plugin to `vite dev`. Prod
- * builds (`vite build`) skip it entirely so the route doesn't leak
- * into shipped bundles.
+- Dev-only: `apply: 'serve'` gates the plugin to `vite dev`. Prod
+- builds (`vite build`) skip it entirely so the route doesn't leak
+- into shipped bundles.
  */
 function figmaMakeKitPlugin(options: { storiesGlob: string | string[] }): Plugin {
   const storiesGlob = Array.isArray(options.storiesGlob) ? options.storiesGlob : [options.storiesGlob]
