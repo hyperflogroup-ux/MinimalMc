@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build-macos:
-    name: Build MinimalMc for macOS
+    name: Build MinimalMc for macOS (Intel)
     runs-on: macos-15
     timeout-minutes: 45
 
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin
+          targets: x86_64-apple-darwin
 
       - name: Install dependencies
         run: npm ci
@@ -36,12 +36,12 @@ jobs:
         run: npx tauri icon src-tauri/icons/icon.png
 
       - name: Build macOS DMG
-        run: npm run tauri build -- --target aarch64-apple-darwin --bundles dmg
+        run: npm run tauri build -- --target x86_64-apple-darwin --bundles dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
-          name: MinimalMc-macOS-Apple-Silicon
-          path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+          name: MinimalMc-macOS-Intel
+          path: src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
           if-no-files-found: error
           retention-days: 14
